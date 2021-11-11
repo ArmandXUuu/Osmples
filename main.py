@@ -1,11 +1,18 @@
 #!/usr/bin/python3
-
 import os
+from classes import AdministrationServer as A, RegistrationServer as E, VoteServer as S, User as U
+from utils.log_util import logger
 
 
 # Global variables
 terminate_programe = False
+a = A.AdministrationServer()
+e = E.RegistrationServer()
+s = S.VoteServer()
 
+# debug variables
+debug = False
+logger.debug("This is the very begging of the program !")
 
 def show_welcoming_message():
     print("Bonjour ô maître Rémi ! Comment puis-je aider votre Sainteté ?")
@@ -13,7 +20,8 @@ def show_welcoming_message():
 
 def show_options():
     print(
-        "->1<- Créer un vote.\n->2<- Enregistrer un électeur.\n->3<- Enregistrer un vote.\n->4<- Vérifier un vote.\n->5<- Procéder au dépouillement.\n->6<- Quitter le programme.")
+        "->1<- Créer un vote.\n->2<- Enregistrer un électeur.\n->3<- Enregistrer un vote.\n->4<- Vérifier un "
+        "vote.\n->5<- Procéder au dépouillement.\n->6<- Quitter le programme.")
 
 
 def start_vote_creation():
@@ -22,6 +30,13 @@ def start_vote_creation():
 
 def start_elector_creation():
     print_information("Création d'un électeur...")
+    if not debug:
+        first_name = input("Please enter the first name :")
+        last_name = input("Please enter the last name :")
+        email = input("Please enter email :")
+        a.add_user(U.User(first_name, last_name, email, U.UserTypes.Voter))
+    else:
+        a.add_user(U.User("ziyi", "XU", "ziyi@drouot.com", U.UserTypes.Voter))
 
 
 def start_vote_selection():
