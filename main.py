@@ -11,8 +11,10 @@ e = E.RegistrationServer()
 s = S.VoteServer()
 
 # debug variables
-debug = False
+debug = True
 logger.debug("This is the very begging of the program !")
+
+vote_test = A.Vote(["Macron", "Obama", "XI Jinping"], "2021-11-11 00:00:00", "2022-01-01 12:59:59", 1)
 
 def show_welcoming_message():
     print("Bonjour ô maître Rémi ! Comment puis-je aider votre Sainteté ?")
@@ -31,17 +33,21 @@ def start_vote_creation():
 def start_elector_creation():
     print_information("Création d'un électeur...")
     if not debug:
-        first_name = input("Please enter the first name :")
-        last_name = input("Please enter the last name :")
-        email = input("Please enter email :")
+        first_name = input("Please enter the first name : ")
+        last_name = input("Please enter the last name : ")
+        email = input("Please enter email : ")
         a.add_user(U.User(first_name, last_name, email, U.UserTypes.Voter))
     else:
         a.add_user(U.User("ziyi", "XU", "ziyi@drouot.com", U.UserTypes.Voter))
+        a.add_user(U.User("ziy1i", "XU4", "ziyi1@drouot.com", U.UserTypes.Voter))
+        a.add_user(U.User("ziyi2", "X4U", "ziy2i@drouot.com", U.UserTypes.Voter))
+        a.add_user(U.User("ziy3i", "3XU", "z1iyi@d3rouot.com", U.UserTypes.Voter))
+        a.add_user(U.User("ziy4i", "XU53", "ziyi42@drouot.com", U.UserTypes.Voter))
 
 
 def start_vote_selection():
     print_information("Sélection d'un vote...")
-
+    print(vote_test)
 
 def start_vote_verification():
     print_information("Vérification du vote...")
@@ -68,7 +74,7 @@ def execute_option(index: str):
         "3": start_vote_selection,
         "4": start_vote_verification,
         "5": start_vote_counting,
-        "6": terminate_program
+        "6": terminate_program,
     }
 
     method = options.get(index)
