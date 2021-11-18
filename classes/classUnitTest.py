@@ -21,7 +21,7 @@ class MyTestCase(unittest.TestCase):
         vote_test = V(["Macron", "Obama", "XI Jinping"], "2021-11-11 00:00:00", "2022-01-01 12:59:59", 1)
         print(vote_test)
 
-        e.generate_secret_id(a)
+        e.generate_credentials(a.get_uuids())
 
         e.set_certificate("TODO, certificate to generate while init, TODO to rename to a identifiable string")
 

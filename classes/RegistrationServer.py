@@ -1,29 +1,33 @@
 # Le serveur "E"
 # Il est l'autorité d'enregristrement des utilisateurs (le serveur qui CRÉER LES ACCÉS)
 
+from typing import List
 from classes.Server import Server
 from classes.AdministrationServer import AdministrationServer as A
+import pbkdf2 as PUB
 from utils.log_util import logger
 from random import shuffle
-
+from cryptoUtils.hashage import generate_uuid
 
 class RegistrationServer(Server):
 
     def __init__(self):
         print("initiate a Serveur d'enregistrement")
 
-    def generate_secret_id(self, a: A) -> [str]:
-        uuids = a.get_uuids()
-        vote_codes = []
-        logger.debug(uuids)
+    def generate_credentials(self, uuid_list: list):
+        vote_codes = {}
 
-        for uuid in uuids:
-            # logger.debug(uuid)
-            vote_codes.append(RegistrationServer.__generate_vote_code(uuid))
-
-        print("Secret id generated")
-        logger.debug("Vote_codes : {}".format(vote_codes))
+        for uuid in uuid_list:
+            f = open("/data/credentials/" + uuid, "w")
+            f.write(self.generate_secret_id(uuid))
+            vote_codes[uuid] = self.__generate_vote_code(uuid)
+            f.close()
         return vote_codes
+
+    def generate_secret_id(self, uuid: str) -> str:
+        c_n = generate_uuid(uuid)
+        print("Secret id generated")
+        return c_n
 
     @staticmethod
     def __generate_vote_code(uuid: str) -> str:  # Pub() function

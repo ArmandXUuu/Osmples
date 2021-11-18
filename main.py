@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import os
-from classes import AdministrationServer as A, RegistrationServer as E, VoteServer as S, User as U
+from classes import AdministrationServer as A, RegistrationServer as E, VoteServer as S, User as U, pbkdf2 as PUB
 from utils.log_util import logger
 
 
@@ -56,8 +56,11 @@ def start_elector_creation():
 
 def start_vote_selection():
     print_information("Sélection d'un vote...")
-    for vote in vote_list:
-        print(vote)
+    if not debug:
+        for vote in vote_list:
+            print(vote)
+    else:
+        print(vote_test)
 
 def start_vote_verification():
     print_information("Vérification du vote...")
