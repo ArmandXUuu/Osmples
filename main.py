@@ -9,6 +9,7 @@ terminate_programe = False
 a = A.AdministrationServer()
 e = E.RegistrationServer()
 s = S.VoteServer()
+vote_list = []
 
 # debug variables
 debug = True
@@ -34,8 +35,7 @@ def start_vote_creation():
     liste_candidats = []
     for candidat in candidats_input.split(','):
         liste_candidats.append(candidat.strip())
-    
-    print(liste_candidats)
+    vote_list.append(A.Vote(liste_candidats, start_date, end_date))
 
 
 
@@ -56,7 +56,8 @@ def start_elector_creation():
 
 def start_vote_selection():
     print_information("Sélection d'un vote...")
-    print(vote_test)
+    for vote in vote_list:
+        print(vote)
 
 def start_vote_verification():
     print_information("Vérification du vote...")
