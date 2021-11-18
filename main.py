@@ -28,6 +28,15 @@ def show_options():
 
 def start_vote_creation():
     print_information("Création du vote ...")
+    start_date = input("Date de début (YYYY-MM-DD) : ")
+    end_date = input("Date de fin (YYYY-MM-DD) : ")
+    candidats_input = input("Saisir les candidats sous la forme 'nom prénom' et séparer chaque candidat par une virgule : ")
+    liste_candidats = []
+    for candidat in candidats_input.split(','):
+        liste_candidats.append(candidat.strip())
+    
+    print(liste_candidats)
+
 
 
 def start_elector_creation():
