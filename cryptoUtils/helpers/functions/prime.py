@@ -1,4 +1,4 @@
-from functions.euclide import pgcd, euclide_etendu
+from cryptoUtils.helpers.functions.euclide import pgcd, euclide_etendu
 
 def is_prime_number(number: int) -> bool:
     for n in range(2, number):
