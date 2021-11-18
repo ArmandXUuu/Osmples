@@ -1,13 +1,13 @@
 # Le serveur "E"
 # Il est l'autorité d'enregristrement des utilisateurs (le serveur qui CRÉER LES ACCÉS)
 
-from typing import List
 from classes.Server import Server
-from classes.AdministrationServer import AdministrationServer as A
 from utils.log_util import logger
 from random import shuffle
 from cryptoUtils.hashage import generate_uuid
 from Crypto.Protocol.KDF import PBKDF2
+from cryptoUtils.math_utils import fast_mod
+from utils.const import *
 
 class RegistrationServer(Server):
 
@@ -31,11 +31,9 @@ class RegistrationServer(Server):
         return c_n
 
     @staticmethod
-    def __generate_vote_code(c_n: str, uuid: str) -> bytes:  # Pub() function
+    def __generate_vote_code(c_n: str, uuid: str) -> int:  # Pub() function
         print("Code de vote pour c_n is generated")
-       # logger.debug("TODO generate Pub(c_n) for {}".format(uuid))
-        res = PBKDF2(c_n, bytes(uuid, "utf-8"))
-        return PBKDF2(c_n, bytes(uuid, "utf-8"))
+        return fast_mod(g, int.from_bytes(PBKDF2(c_n, bytes(uuid, "utf-8")), byteorder="little"), p)
 
     def __shuffle_list(self, list_in: [str]) -> [str]:
         list_out = list_in

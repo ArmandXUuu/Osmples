@@ -52,9 +52,3 @@ class AdministrationServer(Server):
     def __str__(self):
         return "In administrater server A we have : {} - {}".format(self.user_infos, self.user_infos)
 
-
-"""
-    def get_vote_codes(self, e: E):
-        vote_codes = e.generate_secret_id(self)
-        logger.debug("IN A, we have vote_codes = {}".format(vote_codes))
-"""

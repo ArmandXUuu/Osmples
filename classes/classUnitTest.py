@@ -17,7 +17,7 @@ class MyTestCase(unittest.TestCase):
         user2 = User("ThangLdong", "C", "abc@abc.abc", UserTypes.Voter)
         user3 = User("ThanagLong", "C", "abc@avbc.abc", UserTypes.Voter)
         user4 = User("Than5gLdong", "C", "abc@abc.abc", UserTypes.Voter)
-        user5 = User("ThanzgLong", "C", "abc@abc.abc", UserTypes.Voter)
+        user5 = User("ThanzgLong", "C", "abc@abc.abc", UserTypes.TrustedDelegatedUser)
 
         a.add_user(user1)
         a.add_user(user2)
