@@ -9,7 +9,6 @@ terminate_programe = False
 a = A.AdministrationServer()
 e = E.RegistrationServer()
 s = S.VoteServer()
-vote_list = []
 
 # debug variables
 debug = True
@@ -29,6 +28,7 @@ def show_options():
 
 def start_vote_creation():
     print_information("Création du vote ...")
+    """
     start_date = input("Date de début (YYYY-MM-DD) : ")
     end_date = input("Date de fin (YYYY-MM-DD) : ")
     candidats_input = input("Saisir les candidats sous la forme 'nom prénom' et séparer chaque candidat par une virgule : ")
@@ -36,7 +36,8 @@ def start_vote_creation():
     for candidat in candidats_input.split(','):
         liste_candidats.append(candidat.strip())
     vote_list.append(A.Vote(liste_candidats, start_date, end_date))
-
+    """
+    a.add_vote()
 
 
 def start_elector_creation():
@@ -51,14 +52,13 @@ def start_elector_creation():
         a.add_user(U.User("ziy1i", "XU4", "ziyi1@drouot.com", U.UserTypes.Voter))
         a.add_user(U.User("ziyi2", "X4U", "ziy2i@drouot.com", U.UserTypes.Voter))
         a.add_user(U.User("ziy3i", "3XU", "z1iyi@d3rouot.com", U.UserTypes.Voter))
-        a.add_user(U.User("ziy4i", "XU53", "ziyi42@drouot.com", U.UserTypes.Voter))
+        a.add_user(U.User("ziy4i", "XU53", "ziyi42@drouot.com", U.UserTypes.TrustedDelegatedUser))
 
 
 def start_vote_selection():
     print_information("Sélection d'un vote...")
-    if not debug:
-        for vote in vote_list:
-            print(vote)
+    if debug:
+        print(a.vote)
     else:
         print(vote_test)
 

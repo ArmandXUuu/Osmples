@@ -13,24 +13,36 @@ class MyTestCase(unittest.TestCase):
         e = E()
         s = S()
 
+        a.add_vote()
+
         user1 = User("Ziyi", "XU", "ziyi@avbc.abc", UserTypes.Voter)
         user2 = User("ThangLdong", "C", "abc@abc.abc", UserTypes.Voter)
         user3 = User("ThanagLong", "C", "abc@avbc.abc", UserTypes.Voter)
         user4 = User("Than5gLdong", "C", "abc@abc.abc", UserTypes.Voter)
         user5 = User("ThanzgLong", "C", "abc@abc.abc", UserTypes.TrustedDelegatedUser)
+        user6 = User("fsa", "C", "abc@abc.abc", UserTypes.TrustedDelegatedUser)
+        user7 = User("fsadfsf", "C", "abc@abc.abc", UserTypes.TrustedDelegatedUser)
+        user8 = User("fdfsdfsdfsdfsdf", "C", "abc@abc.abc", UserTypes.TrustedDelegatedUser)
+        user9 = User("fdfefe", "C", "abc@abc.abc", UserTypes.TrustedDelegatedUser)
 
         a.add_user(user1)
         a.add_user(user2)
         a.add_user(user3)
         a.add_user(user4)
         a.add_user(user5)
-        vote_test = V(["Macron", "Obama", "XI Jinping"], "2021-11-11 00:00:00", "2022-01-01 12:59:59", 1)
-        print(vote_test)
+        a.add_user(user6)
+        a.add_user(user7)
+        a.add_user(user8)
+        a.add_user(user9)
+
 
         print(e.generate_credentials(a.get_uuids()))
 
+        a.vote.vote_codes = e.generate_credentials(a.get_uuids())
+
         e.set_certificate("TODO, certificate to generate while init, TODO to rename to a identifiable string")
 
+        test1 = a.vote.get_alpha()
         # certificat
         logger.debug(a.get_certificate())
         logger.debug(e.get_certificate())
