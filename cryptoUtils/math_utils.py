@@ -1,4 +1,7 @@
-def fast_mod(x: int, n: int, mod: int) -> int:
+from utils.const import *
+
+
+def fast_mod(x: int, n: int, mod=p) -> int:
     """
     https://blog.csdn.net/weixin_46395886/article/details/113103043?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1.showsourcetag&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1.showsourcetag
     :param x:
@@ -19,4 +22,3 @@ def fast_mod(x: int, n: int, mod: int) -> int:
 
         if temp < 1:
             return result
-
