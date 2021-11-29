@@ -10,7 +10,7 @@ def sign_signature(message: str) -> tuple:
     y = randint(2, p - 1)
     while pgcd_1(y, p - 1) != 1:
         y = randint(2, p - 1)
-    y_inv = find_inverse_bezout(y, p)
+    y_inv = find_inverse_bezout(y, p - 1)
     h = fast_mod(g, x)
     h_M = get_hashage_int(message)
 
@@ -27,7 +27,7 @@ def verify_signature(public_key: tuple, signature: tuple, message_prime: str) ->
     left = (fast_mod(h, s_1, p) * fast_mod(s_1, s_2, p)) % p
     right = fast_mod(g, h_M_tilde, p)
 
-    return left == right # TODO JE SUIS BLOQUÉ @Long
+    return left == right  # TODO JE SUIS BLOQUÉ @Long
 
 
 def verify_signature_1(public_key: tuple, signature: tuple) -> bool:
