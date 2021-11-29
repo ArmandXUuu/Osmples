@@ -9,10 +9,11 @@ from Crypto.Protocol.KDF import PBKDF2
 from cryptoUtils.math_utils import fast_mod
 from utils.const import *
 
-class RegistrationServer(Server):
 
+class RegistrationServer(Server):
     def __init__(self):
-        print("initiate a Serveur d'enregistrement")
+        super().__init__("I am a RegistrationServer")
+        logger.debug("A Registration Server was initiated")
 
     def generate_credentials(self, uuid_list: list):
         vote_codes = []

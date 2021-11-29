@@ -7,6 +7,7 @@ import hashage
 import signature
 from sys import setrecursionlimit
 
+
 class MyTestCase(unittest.TestCase):
     def test_something(self):
         """
@@ -30,15 +31,14 @@ class MyTestCase(unittest.TestCase):
         # logger.debug(hashage.get_hashage_int("THIS IS A test 123"))
         # logger.debug(signature.sign_signature("message"))
 
-        public_key, sig, _, _, _, h_M = signature.sign_signature("message")
-        logger.debug(public_key)
-        logger.debug(sig)
-        result_1 = signature.verify_signature(public_key, sig, "message")
-        result_2 = signature.verify_signature(public_key, sig, "messssss")
-        logger.debug(result_1)
-        logger.debug(result_2)
-        result_3 = signature.verify_signature_1((23, 7, 4), (17, 3))
-        logger.debug(result_3)
+        # public_key, sig = signature.sign_signature("message")
+        # logger.debug(public_key)
+        # logger.debug(sig)
+        # result_1 = signature.verify_certificate(public_key, sig, "message")
+        # result_2 = signature.verify_certificate(public_key, sig, "messssss")
+        # logger.debug(result_1)
+        # logger.debug(result_2)
+        # these test are not upated, after the changement of the signature of the function sign_signature() and verify_certificate()
 
 
 if __name__ == '__main__':

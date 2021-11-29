@@ -13,6 +13,7 @@ from utils.const import *
 # from RegistrationServer import RegistrationServer as E
 debug = True
 
+
 class Bulletin:
     vote_id = 0
     voter_uuid = 0
@@ -72,7 +73,8 @@ class AdministrationServer(Server):
     vote = None
 
     def __init__(self):
-        print("initiate a Administration server")
+        super().__init__("I am an AdministrationServer")
+        logger.debug("An Administration Server was initiated")
 
     def add_user(self, user: User):
         uuid = generate_uuid("user_Unique_ID for {}".format(user.__str__()))
