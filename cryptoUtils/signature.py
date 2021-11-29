@@ -27,7 +27,7 @@ def verify_signature(public_key: tuple, signature: tuple, message_prime: str) ->
     left = (fast_mod(h, s_1, p) * fast_mod(s_1, s_2, p)) % p
     right = fast_mod(g, h_M_tilde, p)
 
-    return left == right  # TODO JE SUIS BLOQUÉ @Long
+    return left == right
 
 
 def verify_signature_1(public_key: tuple, signature: tuple) -> bool:
