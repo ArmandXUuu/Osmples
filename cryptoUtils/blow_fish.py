@@ -2,8 +2,9 @@
 
     blow_fish.py: Blowfish algorithm implantation in python.
 
-    Based on Go implementation of Piotr Pszczółkowski.
+    Based on Go implementation of Piotr Pszczółkowski
     https://github.com/piotrpsz/Blowfish
+    and the original article.
 
     Copyright (C) 2021 by Ziyi XU and Thang Long Cama
 
@@ -12,21 +13,23 @@
 
     Blowfish is a block cipher that can be used for symmetric-key encryption.
     It has a 8-byte block size and supports a variable-length key, from 4 to
-    56 bytes. It's fast, free and has been analyzed considerably. It was designed
-    by Bruce Schneier and more details about it can be found at
+    56 bytes. The encryption and decryption functions operate on 64-bit blocks.
+    It's fast, free and has been analyzed considerably. It was designed by
+    Bruce Schneier and more details about it can be found at
     <https://www.schneier.com/blowfish.html>.
 
 """
 
-PI_P_ARRAY = (
+from utils.log_util import logger
+
+PI_P_BOX = [
     0x243f6a88, 0x85a308d3, 0x13198a2e, 0x03707344, 0xa4093822, 0x299f31d0,
     0x082efa98, 0xec4e6c89, 0x452821e6, 0x38d01377, 0xbe5466cf, 0x34e90c6c,
     0xc0ac29b7, 0xc97c50dd, 0x3f84d5b5, 0xb5470917, 0x9216d5d9, 0x8979fb1b,
-)
+]
 
-PI_S_BOXES = (
-
-    (
+PI_S_BOXES = [
+    [
         0xd1310ba6, 0x98dfb5ac, 0x2ffd72db, 0xd01adfb7, 0xb8e1afed, 0x6a267e96,
         0xba7c9045, 0xf12c7f99, 0x24a19947, 0xb3916cf7, 0x0801f2e2, 0x858efc16,
         0x636920d8, 0x71574e69, 0xa458fea3, 0xf4933d7e, 0x0d95748f, 0x728eb658,
@@ -70,8 +73,8 @@ PI_S_BOXES = (
         0xd60f573f, 0xbc9bc6e4, 0x2b60a476, 0x81e67400, 0x08ba6fb5, 0x571be91f,
         0xf296ec6b, 0x2a0dd915, 0xb6636521, 0xe7b9f9b6, 0xff34052e, 0xc5855664,
         0x53b02d5d, 0xa99f8fa1, 0x08ba4799, 0x6e85076a,
-    ),
-    (
+    ],
+    [
         0x4b7a70e9, 0xb5b32944, 0xdb75092e, 0xc4192623, 0xad6ea6b0, 0x49a7df7d,
         0x9cee60b8, 0x8fedb266, 0xecaa8c71, 0x699a17ff, 0x5664526c, 0xc2b19ee1,
         0x193602a5, 0x75094c29, 0xa0591340, 0xe4183a3e, 0x3f54989a, 0x5b429d65,
@@ -115,8 +118,8 @@ PI_S_BOXES = (
         0x9e447a2e, 0xc3453484, 0xfdd56705, 0x0e1e9ec9, 0xdb73dbd3, 0x105588cd,
         0x675fda79, 0xe3674340, 0xc5c43465, 0x713e38d8, 0x3d28f89e, 0xf16dff20,
         0x153e21e7, 0x8fb03d4a, 0xe6e39f2b, 0xdb83adf7,
-    ),
-    (
+    ],
+    [
         0xe93d5a68, 0x948140f7, 0xf64c261c, 0x94692934, 0x411520f7, 0x7602d4f7,
         0xbcf46b2e, 0xd4a20068, 0xd4082471, 0x3320f46a, 0x43b7d4b7, 0x500061af,
         0x1e39f62e, 0x97244546, 0x14214f74, 0xbf8b8840, 0x4d95fc1d, 0x96b591af,
@@ -160,8 +163,8 @@ PI_S_BOXES = (
         0xed545578, 0x08fca5b5, 0xd83d7cd3, 0x4dad0fc4, 0x1e50ef5e, 0xb161e6f8,
         0xa28514d9, 0x6c51133c, 0x6fd5c7e7, 0x56e14ec4, 0x362abfce, 0xddc6c837,
         0xd79a3234, 0x92638212, 0x670efa8e, 0x406000e0,
-    ),
-    (
+    ],
+    [
         0x3a39ce37, 0xd3faf5cf, 0xabc27737, 0x5ac52d1b, 0x5cb0679e, 0x4fa33742,
         0xd3822740, 0x99bc9bbe, 0xd5118e9d, 0xbf0f7315, 0xd62d1c7e, 0xc700c47b,
         0xb78c1b6b, 0x21a19045, 0xb26eb1be, 0x6a366eb4, 0x5748ab2f, 0xbc946e79,
@@ -205,17 +208,110 @@ PI_S_BOXES = (
         0x85cbfe4e, 0x8ae88dd8, 0x7aaaf9b0, 0x4cf9aa7e, 0x1948c25c, 0x02fb8a8c,
         0x01c36ae4, 0xd6ebe1f9, 0x90d4f869, 0xa65cdea0, 0x3f09252d, 0xc208e69f,
         0xb74e6132, 0xce77e25b, 0x578fdfe3, 0x3ac372e6,
-    ),
-)
+    ],
+]
 
 N = 16
 
 
-class BlowFish():
+def str_split(data: str) -> tuple:
+    if not len(data) == 8:
+        raise (RuntimeError, "Key length should between 8 and 56 bytes.")
+
+    # big-endian
+    x_l = ord(data[3]) | (ord(data[2]) << 8) | (ord(data[1]) << 16) | (ord(data[0]) << 24)
+    x_r = ord(data[7]) | (ord(data[6]) << 8) | (ord(data[5]) << 16) | (ord(data[4]) << 24)
+
+    return x_l, x_r
+
+
+def str_join(x_l: int, x_r: int) -> tuple:
+    return ''.join([
+        chr((x_l >> 24) & 0xff), chr((x_l >> 16) & 0xff), chr((x_l >> 8) & 0xff), chr(x_l & 0xff)
+    ]), ''.join([
+        chr((x_r >> 24) & 0xff), chr((x_r >> 16) & 0xff), chr((x_r >> 8) & 0xff), chr(x_r & 0xff)
+    ])
+
+
+class BlowFish:
+    S = []
+    P = []
 
     def __init__(self, key: str):
-        pass
+        key_len = len(key)
 
+        if not key or len(key) < 8 or len(key) > 56:
+            raise (RuntimeError, "Key length should between 8 and 56 bytes.")
 
-    def f(self, block_in: bytes):
-        pass
+        self.S = PI_S_BOXES
+
+        k = 0
+        for i in range(N + 2):
+            data = 0
+            for j in range(0, 4):
+                data = (data << 8) | ord(key[k])
+                k += 1
+                if k >= key_len:
+                    k = 0
+            logger.debug("toto")
+
+            self.P.append(PI_P_BOX[i] ^ data)
+
+        data_l = 0
+        data_r = 0
+
+        for i in range(0, N + 2, 2):
+            data_l, data_r = self.cipher(data_l, data_r)
+            self.P[i] = data_l
+            self.P[i + 1] = data_r
+
+        for i in range(4):
+            for j in range(0, 256, 2):
+                data_l, data_r = self.cipher(data_l, data_r)
+                self.S[i][j] = data_l
+                self.S[i][j + 1] = data_r
+
+        logger.debug("Init fini")
+
+    def cipher(self, x_l: str, x_r: str, decrypt=False) -> tuple:
+        if not decrypt:
+            # N-1 rounds
+            for i in range(N):
+                x_l ^= self.P[i]
+                x_r = self.__f(x_l) ^ x_r
+                x_l, x_r = x_r, x_l
+            # N - last round
+            x_l, x_r = x_r, x_l
+            x_r ^= self.P[N]
+            x_l ^= self.P[N + 1]
+        else:
+            # N-1 rounds
+            for i in range(N + 1, 1, -1):
+                x_l ^= self.P[i]
+                x_r = self.__f(x_l) ^ x_r
+                x_l, x_r = x_r, x_l
+
+            # N - last round
+            x_l, x_r = x_r, x_l
+            x_r ^= self.P[1]
+            x_l ^= self.P[0]
+        return x_l, x_r
+
+    def encrypt(self, data: str) -> tuple:
+        x_l, x_r = str_split(data)
+        x_l, x_r = self.cipher(x_l, x_r, False)
+        return str_join(x_l, x_r)
+
+    def decrypt(self, data: str) -> str:
+        x_l, x_r = str_split(data)
+        x_l, x_r = self.cipher(x_l, x_r, True)
+
+        return ''.join(str_join(x_l, x_r))
+
+    def __f(self, block_in: int):
+        a = (block_in & 0xff000000) >> 24
+        b = (block_in & 0x00ff0000) >> 16
+        c = (block_in & 0x0000ff00) >> 8
+        d = (block_in & 0x000000ff)
+
+        return ((self.S[0][a] + self.S[1][b] % 2 ** 32) ^ self.S[2][c] + self.S[3][d]) * 2**32 & 0xffffffff
