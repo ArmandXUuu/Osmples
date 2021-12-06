@@ -13,6 +13,7 @@ from utils.const import *
 # from RegistrationServer import RegistrationServer as E
 debug = True
 
+
 class Bulletin:
     vote_id = 0
     voter_uuid = 0
@@ -30,7 +31,7 @@ class Bulletin:
 class Vote:
     id = 0
 
-    __candidates = []
+    __candidates = {}
     __starts_at = ""
     __ends_at = ""
     __choices_possible = 1
@@ -40,18 +41,21 @@ class Vote:
 
     bulletins = []  # liste de type Bulletin
 
-    def __init__(self, candidates: [str], starts_at: str, ends_at: str, choices_possible: int = 1):
+    def __init__(self, candidates: dict, starts_at: str, ends_at: str, choices_possible: int = 1):
         self.__candidates = candidates
         self.__starts_at = starts_at
         self.__ends_at = ends_at
         self.__choices_possible = choices_possible
 
     def __str__(self):
-        return "########## Welcome ! ##########\n\033[1mInformations on this vote :\033[0m\n\t" \
+        candidate_strings = []
+        for k in self.__candidates.keys():
+            candidate_strings.append("\t\t" + str(k) + " - " + self.__candidates[k])
+        return "\033[1mInformations on this vote :\033[0m\n\t" \
                "You can only vote between {} and {}" \
-               "\n\tCandidates are : \033[1;32m{}\033[0m\n\tYOU CAN JUST VOTE FOR \033[1;31m{}\033[0m PERSON(S) !" \
+               "\n\tCandidates are : \n\033[1;32m{}\033[0m\n\tYOU CAN JUST VOTE FOR \033[1;31m{}\033[0m PERSON(S) !\n" \
             .format(self.__starts_at, self.__ends_at,
-                    ','.join(self.__candidates),
+                    '\n'.join(candidate_strings),
                     self.__choices_possible)
 
     def add_bulletin(self, bulletin: Bulletin):
@@ -64,6 +68,8 @@ class Vote:
 
         return alpha % p
 
+    def get_candidates_num(self):
+        return len(self.__candidates)
 
 
 class AdministrationServer(Server):
@@ -72,7 +78,8 @@ class AdministrationServer(Server):
     vote = None
 
     def __init__(self):
-        print("initiate a Administration server")
+        super().__init__("I am an AdministrationServer")
+        logger.debug("An Administration Server was initiated")
 
     def add_user(self, user: User):
         uuid = generate_uuid("user_Unique_ID for {}".format(user.__str__()))
@@ -100,11 +107,13 @@ class AdministrationServer(Server):
         if not debug:
             start_date = input("Date de début (YYYY-MM-DD) : ")
             end_date = input("Date de fin (YYYY-MM-DD) : ")
-            candidats_input = input(
+            candidates_input = input(
                 "Saisir les candidats sous la forme 'nom prénom' et séparer chaque candidat par une virgule : ")
-            liste_candidats = []
-            for candidat in candidats_input.split(','):
-                liste_candidats.append(candidat.strip())
-            self.vote = Vote(liste_candidats, start_date, end_date)
+            liste_candidates = {}
+            i = 1
+            for candidat in candidates_input.split(','):
+                liste_candidates[i] = candidat.strip()
+                i += 1
+            self.vote = Vote(liste_candidates, start_date, end_date)
         else:
-            self.vote = Vote(["Macron", "Obama", "XI Jinping"], "2021-11-11 00:00:00", "2022-01-01 12:59:59", 1)
+            self.vote = Vote({1: "Macron", 2: "Obama", 3: "XI Jinping"}, "2021-11-11 00:00:00", "2022-01-01 12:59:59", 1)

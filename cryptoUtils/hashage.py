@@ -119,3 +119,19 @@ class SHA256:
 
     def hexdigest(self):
         return binascii.hexlify(self.digest()).decode('ascii')
+
+
+def get_hashage_int(message: str) -> int:
+    """
+    This function takes a string as input, which is the message to be hash-ed. It outputs an int
+    which is the ASCII code of the result of the hash-ed message
+    :param message: a string, as its name suggests
+    :return: The ASCII code of the result of the hash-ed message, concatenated
+    """
+    hash_instance = SHA256(message)
+    res_array = np.fromstring(hash_instance.hexdigest(), dtype=np.uint8)
+    result = ""
+    for res in res_array:
+        result += str(res)
+    return int(result)
+
