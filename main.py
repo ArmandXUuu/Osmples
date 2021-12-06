@@ -2,7 +2,9 @@
 import os
 from classes import AdministrationServer as A, RegistrationServer as E, VoteServer as S, User as U
 from utils.log_util import logger
+from sys import setrecursionlimit
 
+setrecursionlimit(10000000)
 
 # Global variables
 terminate_programe = False
@@ -15,6 +17,7 @@ debug = True
 logger.debug("This is the very begging of the program !")
 
 vote_test = A.Vote({1: "Macron", 2: "Obama", 3: "XI Jinping"}, "2021-11-11 00:00:00", "2022-01-01 12:59:59", 1)
+
 
 def show_welcoming_message():
     print("Bonjour ô maître Rémi ! Comment puis-je aider votre Sainteté ?")

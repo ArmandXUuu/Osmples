@@ -1,6 +1,7 @@
 import copy
 import struct
 import binascii
+import numpy as np
 
 
 def generate_uuid(clair_info: str) -> str:
@@ -103,6 +104,8 @@ class SHA256:
     def update(self, m):
         if not m:
             return
+        if type(m) is str:
+            m = bytes(m, encoding="utf-8")
 
         self._cache += m
         self._counter += len(m)
