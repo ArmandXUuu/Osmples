@@ -3,6 +3,9 @@ import math_utils
 import time
 from utils.log_util import logger
 import random
+import hashage
+import signature
+from sys import setrecursionlimit
 
 
 class MyTestCase(unittest.TestCase):
@@ -23,7 +26,19 @@ class MyTestCase(unittest.TestCase):
 
         p = 20694785691422546401013643657505008064922989295751104097100884787057374219242717401922237254497684338129066633138078958404960054389636289796393038773905722803605973749427671376777618898589872735865049081167099310535867780980030790491654063777173764198678527273474476341835600035698305193144284561701911000786737307333564123971732897913240474578834468260652327974647951137672658693582180046317922073668860052627186363386088796882120769432366149491002923444346373222145884100586421050242120365433561201320481118852408731077014151666200162313177169372189248078507711827842317498073276598828825169183103125680162072880719
 
+        setrecursionlimit(10000000)
         print(math_utils.fast_mod(g, random.randint(2, g-1), p))
+        # logger.debug(hashage.get_hashage_int("THIS IS A test 123"))
+        # logger.debug(signature.sign_signature("message"))
+
+        # public_key, sig = signature.sign_signature("message")
+        # logger.debug(public_key)
+        # logger.debug(sig)
+        # result_1 = signature.verify_certificate(public_key, sig, "message")
+        # result_2 = signature.verify_certificate(public_key, sig, "messssss")
+        # logger.debug(result_1)
+        # logger.debug(result_2)
+        # these test are not upated, after the changement of the signature of the function sign_signature() and verify_certificate()
 
 
 if __name__ == '__main__':
