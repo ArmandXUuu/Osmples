@@ -20,7 +20,7 @@ class RegistrationServer(Server):
         for uuid in uuid_list:
             c_n = self.generate_secret_id(uuid)
             f = open("./data/credentials/" + uuid, "w")
-            f.write(c_n)
+            f.write("==================== Voici votre secret id ====================\n" + c_n)
             vote_codes.append(self.__generate_vote_code(c_n, uuid))
             f.close()
         return self.__shuffle_list(vote_codes)
