@@ -3,9 +3,11 @@ import math_utils
 import time
 from utils.log_util import logger
 import random
+import blow_fish
 import hashage
 import signature
 from sys import setrecursionlimit
+
 
 
 class MyTestCase(unittest.TestCase):
@@ -39,6 +41,9 @@ class MyTestCase(unittest.TestCase):
         # logger.debug(result_1)
         # logger.debug(result_2)
         # these test are not upated, after the changement of the signature of the function sign_signature() and verify_certificate()
+
+        bf = blow_fish.BlowFish("THIS IS A TEST THIS IS A TEST")
+
 
 
 if __name__ == '__main__':
