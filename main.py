@@ -14,7 +14,7 @@ s = S.VoteServer()
 debug = True
 logger.debug("This is the very begging of the program !")
 
-vote_test = A.Vote(["Macron", "Obama", "XI Jinping"], "2021-11-11 00:00:00", "2022-01-01 12:59:59", 1)
+vote_test = A.Vote({1: "Macron", 2: "Obama", 3: "XI Jinping"}, "2021-11-11 00:00:00", "2022-01-01 12:59:59", 1)
 
 def show_welcoming_message():
     print("Bonjour ô maître Rémi ! Comment puis-je aider votre Sainteté ?")
@@ -27,16 +27,7 @@ def show_options():
 
 
 def start_vote_creation():
-    print_information("Création du vote ...")
-    """
-    start_date = input("Date de début (YYYY-MM-DD) : ")
-    end_date = input("Date de fin (YYYY-MM-DD) : ")
-    candidats_input = input("Saisir les candidats sous la forme 'nom prénom' et séparer chaque candidat par une virgule : ")
-    liste_candidats = []
-    for candidat in candidats_input.split(','):
-        liste_candidats.append(candidat.strip())
-    vote_list.append(A.Vote(liste_candidats, start_date, end_date))
-    """
+    print_information("Création d'un vote ...")
     a.add_vote()
 
 
@@ -53,14 +44,30 @@ def start_elector_creation():
         a.add_user(U.User("ziyi2", "X4U", "ziy2i@drouot.com", U.UserTypes.Voter))
         a.add_user(U.User("ziy3i", "3XU", "z1iyi@d3rouot.com", U.UserTypes.Voter))
         a.add_user(U.User("ziy4i", "XU53", "ziyi42@drouot.com", U.UserTypes.TrustedDelegatedUser))
+        a.vote.vote_codes = e.generate_credentials(a.get_uuids())
+
+
+def user_definition_done():
+    a.vote.vote_codes = e.generate_credentials(a.get_uuids())
 
 
 def start_vote_selection():
     print_information("Sélection d'un vote...")
-    if debug:
+    choice = -1
+    valide = False
+    public_key = input("Saisir votre clé publique :")
+
+    while choice == -1 and not valide:
         print(a.vote)
-    else:
-        print(vote_test)
+        choice = int(input("Faites votre choix : (1, 2, ou 3)"))
+        if a.vote.get_candidates_num() >= choice > 0:
+            valide = True
+        else:
+            choice = -1
+            print("Faite votre choix parmis {} candidates".format(a.vote.get_candidates_num()))
+
+    print_information("Votre choix est bien pris en compte !")
+
 
 def start_vote_verification():
     print_information("Vérification du vote...")
@@ -88,6 +95,7 @@ def execute_option(index: str):
         "4": start_vote_verification,
         "5": start_vote_counting,
         "6": terminate_program,
+        "user_definition_done": user_definition_done,
     }
 
     method = options.get(index)
@@ -102,8 +110,7 @@ def main():
     show_welcoming_message()
     while not terminate_programe:
         show_options()
-        chosen_option = input("Faites votre choix : ")
-        execute_option(chosen_option)
+        execute_option(input("Faites votre choix : "))
 
 
 if __name__ == "__main__":
