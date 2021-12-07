@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 from classes import AdministrationServer as A, RegistrationServer as E, VoteServer as S, User as U
-from classes.CredentialAuthority import generate_credentials
+from classes.RegistrationServer import generate_credentials
 from utils.log_util import logger
 from sys import setrecursionlimit
 

@@ -1,12 +1,6 @@
-from random import shuffle, choice
-
-from Crypto.Protocol.KDF import PBKDF2
-
-from cryptoUtils.hashage import get_hashage_int, generate_uuid
+from cryptoUtils.hashage import get_hashage_int
 from cryptoUtils.math_utils import find_inverse_bezout, fast_mod
-from utils.const import p, g, ascii_vals, ascii_vals_rev
-from utils.log_util import logger
-from utils.file_rw_utils import json_output
+from utils.const import p, g
 
 
 # Signature El Gamal
@@ -48,44 +42,3 @@ def verify_certificate(public_key: tuple, signature: tuple, message_prime: str) 
     return left == right
 
 
-def generate_secret_id() -> str:
-    """
-    To generate the secret id -- c_n
-    :return: c_n, a string
-    """
-    c_n = []
-    c_ns_14 = ""
-    for i in range(14):
-        bit = choice(list(ascii_vals_rev.keys()))
-        c_n.append(chr(bit))
-        c_ns_14 += str(ascii_vals_rev[bit])
-    c_n_15 = 53 - int(c_ns_14) % 53
-    return ''.join(c_n) + str(ascii_vals[c_n_15])
-
-
-def generate_secret_s(c_n: str, uuid: str) -> bytes:
-    return PBKDF2(c_n, bytes(uuid, "utf-8"))
-
-
-def generate_vote_code(c_n: str, uuid: str) -> int:  # Pub() function
-    print("Code de vote pour c_n is generated")
-    return fast_mod(g, int.from_bytes(generate_secret_s(c_n, uuid), byteorder="little"), p)
-
-
-def shuffle_list(list_in: [str]) -> [str]:
-    list_out = list_in
-    shuffle(list_out)
-    logger.debug("list shuffled and returned as is")
-    return list_out
-
-
-def generate_credentials(uuids: list):
-    vote_codes = []
-
-    for uuid in uuids:
-        c_n = generate_secret_id()
-        credentials = {"c_n": c_n, "public_key": generate_vote_code(c_n, uuid)}
-        json_output(credentials, "./data/credentials/" + uuid)
-        vote_codes.append(credentials["public_key"])
-
-    return shuffle_list(vote_codes)
