@@ -1,5 +1,5 @@
+from classes.CredentialAuthority import sign_signature
 from utils.log_util import logger
-from cryptoUtils.signature import *
 from random import randint
 from utils.const import *
 from cryptoUtils.math_utils import pgcd_1

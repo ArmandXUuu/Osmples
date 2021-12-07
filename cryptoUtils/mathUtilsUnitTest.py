@@ -7,6 +7,7 @@ import blow_fish
 import hashage
 import signature
 from sys import setrecursionlimit
+import zero_knowledge
 
 
 
@@ -43,6 +44,7 @@ class MyTestCase(unittest.TestCase):
         # these test are not upated, after the changement of the signature of the function sign_signature() and verify_certificate()
 
         bf = blow_fish.BlowFish("THIS IS A TEST THIS IS A TEST")
+        zero_knowledge.test()
 
 
 

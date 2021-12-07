@@ -10,7 +10,6 @@ from utils.log_util import logger
 from utils.file_rw_utils import json_output
 from utils.const import *
 
-# from RegistrationServer import RegistrationServer as E
 debug = True
 
 
@@ -91,7 +90,6 @@ class AdministrationServer(Server):
         #   self.vote.vote_codes.append(user.public_key)
 
         logger.debug(self.user_infos)
-        json_output(self.user_infos, True)
 
     def get_uuids(self):
         uuids = []

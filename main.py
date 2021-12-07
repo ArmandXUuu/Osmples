@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import os
 from classes import AdministrationServer as A, RegistrationServer as E, VoteServer as S, User as U
+from classes.CredentialAuthority import generate_credentials
 from utils.log_util import logger
 from sys import setrecursionlimit
 
@@ -47,11 +48,11 @@ def start_elector_creation():
         a.add_user(U.User("ziyi2", "X4U", "ziy2i@drouot.com", U.UserTypes.Voter))
         a.add_user(U.User("ziy3i", "3XU", "z1iyi@d3rouot.com", U.UserTypes.Voter))
         a.add_user(U.User("ziy4i", "XU53", "ziyi42@drouot.com", U.UserTypes.TrustedDelegatedUser))
-        a.vote.vote_codes = e.generate_credentials(a.get_uuids())
+        a.vote.vote_codes = generate_credentials(a.get_uuids())
 
 
 def user_definition_done():
-    a.vote.vote_codes = e.generate_credentials(a.get_uuids())
+    a.vote.vote_codes = generate_credentials(a.get_uuids())
 
 
 def start_vote_selection():

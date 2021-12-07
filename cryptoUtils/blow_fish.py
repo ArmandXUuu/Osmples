@@ -253,7 +253,6 @@ class BlowFish:
                 k += 1
                 if k >= key_len:
                     k = 0
-            logger.debug("toto")
 
             self.P.append(PI_P_BOX[i] ^ data)
 

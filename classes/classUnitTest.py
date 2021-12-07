@@ -1,11 +1,11 @@
 import unittest
 from User import User, UserTypes
 from VoteServer import VoteServer as S
-from AdministrationServer import AdministrationServer as A, Vote as V
+from AdministrationServer import AdministrationServer as A
 from RegistrationServer import RegistrationServer as E
+from classes.CredentialAuthority import verify_certificate, generate_credentials
 from utils.log_util import logger
 from sys import setrecursionlimit
-from cryptoUtils.signature import *
 
 
 class MyTestCase(unittest.TestCase):
@@ -41,7 +41,8 @@ class MyTestCase(unittest.TestCase):
 
         # print(e.generate_credentials(a.get_uuids()))
 
-        a.vote.vote_codes = e.generate_credentials(a.get_uuids())
+        a.vote.vote_codes = generate_credentials(a.get_uuids())
+
 
         # e.set_certificate("TODO, certificate to generate while init, TODO to rename to a identifiable string")
 
