@@ -216,7 +216,7 @@ N = 16
 
 def str_split(data: str) -> tuple:
     if not len(data) == 8:
-        raise (RuntimeError, "Key length should between 8 and 56 bytes.")
+        raise (RuntimeError, "Key length should be 8 bytes.")
 
     # big-endian
     x_l = ord(data[3]) | (ord(data[2]) << 8) | (ord(data[1]) << 16) | (ord(data[0]) << 24)
@@ -272,7 +272,7 @@ class BlowFish:
 
         logger.debug("Init fini")
 
-    def cipher(self, x_l: str, x_r: str, decrypt=False) -> tuple:
+    def cipher(self, x_l, x_r, decrypt=False) -> tuple:
         if not decrypt:
             # N-1 rounds
             for i in range(N):

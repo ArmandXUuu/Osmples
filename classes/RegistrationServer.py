@@ -16,6 +16,17 @@ class RegistrationServer(Server):
         super().__init__("I am a RegistrationServer")
         logger.debug("A Registration Server was initiated")
 
+    def generate_credentials(self, uuids: list):
+        vote_codes = []
+
+        for uuid in uuids:
+            c_n = generate_secret_id()
+            credentials = {"uuid": uuid, "c_n": c_n, "public_key": generate_vote_code(c_n, uuid)}
+            json_output(credentials, "./data/credentials/" + uuid)
+            vote_codes.append(credentials["public_key"])
+
+        return shuffle_list(vote_codes)
+
 
 def generate_secret_id() -> str:
     """
@@ -48,13 +59,3 @@ def shuffle_list(list_in: [str]) -> [str]:
     return list_out
 
 
-def generate_credentials(uuids: list):
-    vote_codes = []
-
-    for uuid in uuids:
-        c_n = generate_secret_id()
-        credentials = {"uuid": uuid, "c_n": c_n, "public_key": generate_vote_code(c_n, uuid)}
-        json_output(credentials, "./data/credentials/" + uuid)
-        vote_codes.append(credentials["public_key"])
-
-    return shuffle_list(vote_codes)

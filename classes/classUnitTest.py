@@ -7,6 +7,7 @@ from classes.CredentialAuthority import verify_certificate
 from classes.RegistrationServer import generate_credentials
 from utils.log_util import logger
 from sys import setrecursionlimit
+from cryptoUtils.el_gamal import *
 
 
 class MyTestCase(unittest.TestCase):
@@ -17,7 +18,7 @@ class MyTestCase(unittest.TestCase):
         e = E()
         s = S()
 
-        a.add_vote()
+        a.set_vote()
 
         user1 = User("Ziyi", "XU", "ziyi@avbc.abc", UserTypes.Voter)
         user2 = User("ThangLdong", "C", "abc@abc.abc", UserTypes.Voter)
@@ -39,11 +40,9 @@ class MyTestCase(unittest.TestCase):
         a.add_user(user8)
         a.add_user(user9)
 
-
         # print(e.generate_credentials(a.get_uuids()))
 
-        a.vote.vote_codes = generate_credentials(a.get_uuids())
-
+        a.vote.vote_codes = e.generate_credentials(a.get_uuids())
 
         # e.set_certificate("TODO, certificate to generate while init, TODO to rename to a identifiable string")
 
@@ -58,6 +57,12 @@ class MyTestCase(unittest.TestCase):
 
         reuslt = verify_certificate(*certificate_a)
         logger.debug(reuslt)
+
+        # El Gamal - pour partager la clé pour Blowfish
+        key = "test_el_gamal"
+        res_encrypt = eg_encrypt(a.get_public_key(), key)
+
+        res_decrypt = eg_decrypt(a.get_signature_x(), *res_encrypt)
 
         # a.get_vote_codes(e)
 

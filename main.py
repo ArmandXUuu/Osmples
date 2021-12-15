@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 import os
 from classes import AdministrationServer as A, RegistrationServer as E, VoteServer as S, User as U
-from classes.RegistrationServer import generate_credentials
+from classes.VoteServer import encrypt_vote, decrypt_vote
+from classes.AdministrationServer import Bulletin
 from utils.log_util import logger
 from sys import setrecursionlimit
 
@@ -32,7 +33,7 @@ def show_options():
 
 def start_vote_creation():
     print_information("Création d'un vote ...")
-    a.add_vote()
+    a.set_vote()
 
 
 def start_elector_creation():
@@ -48,28 +49,30 @@ def start_elector_creation():
         a.add_user(U.User("ziyi2", "X4U", "ziy2i@drouot.com", U.UserTypes.Voter))
         a.add_user(U.User("ziy3i", "3XU", "z1iyi@d3rouot.com", U.UserTypes.Voter))
         a.add_user(U.User("ziy4i", "XU53", "ziyi42@drouot.com", U.UserTypes.TrustedDelegatedUser))
-        a.vote.vote_codes = generate_credentials(a.get_uuids())
+        user_definition_done()
 
 
 def user_definition_done():
-    a.vote.vote_codes = generate_credentials(a.get_uuids())
+    a.vote.vote_codes = e.generate_credentials(a.get_uuids())
+    s.set_vote(a.vote)
 
 
 def start_vote_selection():
     print_information("Sélection d'un vote...")
     choice = -1
     valide = False
-    public_key = input("Saisir votre clé publique :")
+    uuid = input("Saisir votre uuid :")
 
     while choice == -1 and not valide:
-        print(a.vote)
+        print(s.vote)
         choice = int(input("Faites votre choix : (1, 2, ou 3)"))
-        if a.vote.get_candidates_num() >= choice > 0:
+        if s.vote.get_candidates_num() >= choice > 0:
             valide = True
         else:
             choice = -1
-            print("Faite votre choix parmis {} candidates".format(a.vote.get_candidates_num()))
+            print("Faite votre choix parmis {} candidates".format(s.vote.get_candidates_num()))
 
+    s.vote.add_bulletin(Bulletin(a.vote.id, uuid, encrypt_vote(a.vote.get_alpha(), choice)))  # TODO Implement signature
     print_information("Votre choix est bien pris en compte !")
 
 
@@ -90,6 +93,13 @@ def terminate_program():
 def print_information(message: str):
     print("\033[32m%s\033[0m" % message)
 
+def test_decrypt_bulletins():
+    vote_tttest = s.vote
+    for bulletin in vote_tttest.get_bulletins():
+        print(decrypt_vote(11, *bulletin.vote_chiffre))
+        print("dsafads")
+
+
 
 def execute_option(index: str):
     options = {
@@ -100,6 +110,7 @@ def execute_option(index: str):
         "5": start_vote_counting,
         "6": terminate_program,
         "user_definition_done": user_definition_done,
+        "test_decrypt_bulletins": test_decrypt_bulletins
     }
 
     method = options.get(index)

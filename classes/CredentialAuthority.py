@@ -33,7 +33,7 @@ def verify_certificate(public_key: tuple, signature: tuple, message_prime: str) 
     :param message_prime: the message received (message_tilde)
     :return: a bool, True if the validation passed, not vice versa
     """
-    _, _, h = public_key  # Because p and q are "global const" TODO : Do we need to change p and q every time ?
+    _, _, h = public_key
     s_1, s_2 = signature
     h_M_tilde = get_hashage_int(message_prime)
     left = (fast_mod(h, s_1, p) * fast_mod(s_1, s_2, p)) % p

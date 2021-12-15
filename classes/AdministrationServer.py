@@ -15,12 +15,12 @@ debug = True
 
 class Bulletin:
     vote_id = 0
-    voter_uuid = 0
+    voter_uuid = ""
 
-    vote_chiffre = 0
+    vote_chiffre = ()
     signature = 0
 
-    def __init__(self, vote_id: int, voter_uuid: int, vote_chiffre = 0, signature = 0):
+    def __init__(self, vote_id: int, voter_uuid: str, vote_chiffre: tuple, signature = 0):
         self.vote_id = vote_id
         self.voter_uuid = voter_uuid
         self.vote_chiffre = vote_chiffre
@@ -59,6 +59,9 @@ class Vote:
 
     def add_bulletin(self, bulletin: Bulletin):
         self.bulletins.append(bulletin)
+
+    def get_bulletins(self) -> list:
+        return self.bulletins
 
     def get_alpha(self) -> int:
         alpha = 1
@@ -101,7 +104,7 @@ class AdministrationServer(Server):
     def __str__(self):
         return "In administrater server A we have : {} - {}".format(self.user_infos, self.user_infos)
 
-    def add_vote(self):
+    def set_vote(self):
         if not debug:
             start_date = input("Date de début (YYYY-MM-DD) : ")
             end_date = input("Date de fin (YYYY-MM-DD) : ")
@@ -115,3 +118,6 @@ class AdministrationServer(Server):
             self.vote = Vote(liste_candidates, start_date, end_date)
         else:
             self.vote = Vote({1: "Macron", 2: "Obama", 3: "XI Jinping"}, "2021-11-11 00:00:00", "2022-01-01 12:59:59", 1)
+
+    def get_vote(self):
+        return self.vote

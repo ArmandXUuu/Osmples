@@ -27,6 +27,12 @@ class Server:
     def get_certificate(self) -> tuple:
         return self.__certificate
 
+    def get_public_key(self) -> int:
+        return self.public_key[2]  # c'est le `h`
+
+    def get_signature_x(self) -> int:
+        return self.__signature_x
+
     @staticmethod
     def set_certificate(cert_in: str) -> bool:  # TODO To delete.
         if Server.__certificate == "TODO, certificate to generate while init, TODO to rename to a identifiable string true":

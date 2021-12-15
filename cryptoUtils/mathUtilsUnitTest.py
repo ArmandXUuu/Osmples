@@ -5,9 +5,9 @@ from utils.log_util import logger
 import random
 import blow_fish
 import hashage
-import signature
 from sys import setrecursionlimit
 import zero_knowledge
+import el_gamal
 
 
 
@@ -43,7 +43,20 @@ class MyTestCase(unittest.TestCase):
         # logger.debug(result_2)
         # these test are not upated, after the changement of the signature of the function sign_signature() and verify_certificate()
 
-        bf = blow_fish.BlowFish("THIS IS A TEST THIS IS A TEST")
+
+        block = "testabck"
+
+        # MINE
+        bf = blow_fish.BlowFish("Key must be between 4 and 56 bytes long.")
+        out = bf.encrypt(block)
+        out_string = ''.join(out)
+        # out_bytes = bytes(out_string, "unicode")
+        # rint(out_bytes)
+
+        res = bf.decrypt(out_string)
+        print(res)
+
+
         zero_knowledge.test()
 
 
