@@ -25,3 +25,13 @@ def json_output(in_struct, path=None):
             f.close()
     else:
         print(json.dumps(in_struct, default=str))
+
+
+def json_read(uuid: str, champ: str):
+    path = "./data/credentials/" + uuid
+
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        f.close()
+
+    return data[champ]
