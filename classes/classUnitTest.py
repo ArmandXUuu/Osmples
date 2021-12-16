@@ -4,7 +4,6 @@ from VoteServer import VoteServer as S
 from AdministrationServer import AdministrationServer as A
 from RegistrationServer import RegistrationServer as E
 from classes.CredentialAuthority import verify_certificate
-from classes.RegistrationServer import generate_credentials
 from utils.log_util import logger
 from sys import setrecursionlimit
 from cryptoUtils.el_gamal import *

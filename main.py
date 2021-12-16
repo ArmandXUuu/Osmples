@@ -5,6 +5,10 @@ from classes.VoteServer import encrypt_vote, decrypt_vote
 from classes.AdministrationServer import Bulletin
 from utils.log_util import logger
 from sys import setrecursionlimit
+from classes.CredentialAuthority import sign_signature
+from random import randint
+from utils.const import p
+from cryptoUtils.math_utils import pgcd_1
 
 setrecursionlimit(10000000)
 
@@ -72,12 +76,23 @@ def start_vote_selection():
             choice = -1
             print("Faite votre choix parmis {} candidates".format(s.vote.get_candidates_num()))
 
-    s.vote.add_bulletin(Bulletin(a.vote.id, uuid, encrypt_vote(a.vote.get_alpha(), choice)))  # TODO Implement signature
+    vote_encrypted = encrypt_vote(a.vote.get_alpha(), choice)
+    c_n = "HIxCdVoI3fOC0U107"
+    # TODO read the file json and ...
+    res = ""
+    for char in c_n:
+        res += str(ord(char))
+
+    y = randint(2, p - 1)
+    while pgcd_1(y, p - 1) != 1:
+        y = randint(2, p - 1)
+    s.vote.add_bulletin(Bulletin(a.vote.id, uuid, vote_encrypted, sign_signature(vote_encrypted[1], int(res), y)))
     print_information("Votre choix est bien pris en compte !")
 
 
 def start_vote_verification():
     print_information("Vérification du vote...")
+    s.execute_audit()
 
 
 def start_vote_counting():

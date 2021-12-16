@@ -20,18 +20,19 @@ class RegistrationServer(Server):
         vote_codes = []
 
         for uuid in uuids:
-            c_n = generate_secret_id()
-            credentials = {"uuid": uuid, "c_n": c_n, "public_key": generate_vote_code(c_n, uuid)}
+            c_n, c_n_int = generate_secret_id()
+            credentials = {"uuid": uuid, "c_n": c_n, "c_n_int": c_n_int, "code_vote": generate_vote_code(c_n, uuid),
+                           "public_key": fast_mod(g, c_n_int)}
             json_output(credentials, "./data/credentials/" + uuid)
             vote_codes.append(credentials["public_key"])
 
         return shuffle_list(vote_codes)
 
 
-def generate_secret_id() -> str:
+def generate_secret_id() -> tuple:
     """
     To generate the secret id -- c_n
-    :return: c_n, a string
+    :return: c_n_str, a string, c_n_int, the int version
     """
     c_n = []
     c_ns_14 = ""
@@ -40,7 +41,14 @@ def generate_secret_id() -> str:
         c_n.append(chr(bit))
         c_ns_14 += str(ascii_vals_rev[bit])
     c_n_15 = 53 - int(c_ns_14) % 53
-    return ''.join(c_n) + str(ascii_vals[c_n_15])
+    c_n_str = ''.join(c_n) + str(ascii_vals[c_n_15])
+
+    # To generate an int
+    res = ""
+    for char in c_n_str:
+        res += str(ord(char))
+    c_n_int = int(res)
+    return c_n_str, c_n_int
 
 
 def generate_secret_s(c_n: str, uuid: str) -> bytes:
@@ -57,5 +65,3 @@ def shuffle_list(list_in: [str]) -> [str]:
     shuffle(list_out)
     logger.debug("list shuffled and returned as is")
     return list_out
-
-

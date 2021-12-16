@@ -62,6 +62,8 @@ def fast_mod(x: int, n: int, mod=p) -> int:
     :param mod:
     :return:
     """
+    x = int(x)
+    n = int(n)
     result = 1
     b = x
 

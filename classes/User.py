@@ -26,10 +26,7 @@ class User:
         self.__email = email
         self.user_type = user_type
         if user_type == UserTypes.TrustedDelegatedUser:
-            res = ""
-            for char in generate_secret_id():
-                res += str(ord(char))
-            self.__private_key = int(res)
+            _, self.__private_key = generate_secret_id()
             self.public_key = fast_mod(g, self.__private_key)
 
     def __str__(self):

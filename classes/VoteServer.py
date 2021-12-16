@@ -7,6 +7,7 @@ from classes.AdministrationServer import Vote
 from random import randint
 from utils.const import p, g
 from cryptoUtils.math_utils import fast_mod, find_inverse_bezout
+from cryptoUtils.zero_knowledge import *
 
 class VoteServer(Server):
     vote_codes = []
@@ -19,6 +20,14 @@ class VoteServer(Server):
     def set_vote(self, vote):
         self.vote = vote
         self.vote_codes = self.vote.vote_codes
+
+    def execute_audit(self):
+        for bulletin in self.vote.bulletins:
+            chal, w = generate_chal(bulletin.signature[1][1], bulletin.voter_uuid)
+            ressss = zero_knowledge_verify(w, "0EMHOOG9aT3ZfE102", chal, bulletin.signature[1][1], bulletin.voter_uuid)
+            print("dfadsfad")
+        # TODO envoyer chal aux users
+        # TODO implemente-le
 
 
 def encrypt_vote(alpha: int, message: int) -> tuple:

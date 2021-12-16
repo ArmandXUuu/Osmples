@@ -40,5 +40,3 @@ def verify_certificate(public_key: tuple, signature: tuple, message_prime: str) 
     right = fast_mod(g, h_M_tilde, p)
 
     return left == right
-
-
