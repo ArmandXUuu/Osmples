@@ -3,6 +3,7 @@ from enum import IntEnum
 import random
 from utils.const import *
 from cryptoUtils.math_utils import fast_mod
+from classes.RegistrationServer import generate_secret_id
 
 
 class UserTypes(IntEnum):
@@ -25,7 +26,7 @@ class User:
         self.__email = email
         self.user_type = user_type
         if user_type == UserTypes.TrustedDelegatedUser:
-            self.__private_key = random.randint(2, p - 1)
+            _, self.__private_key = generate_secret_id()
             self.public_key = fast_mod(g, self.__private_key)
 
     def __str__(self):

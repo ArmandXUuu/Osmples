@@ -106,6 +106,8 @@ class SHA256:
             return
         if type(m) is str:
             m = bytes(m, encoding="utf-8")
+        if type(m) is int:
+            m = bytes(str(m), encoding="utf-8")
 
         self._cache += m
         self._counter += len(m)
