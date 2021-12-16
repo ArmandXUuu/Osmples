@@ -43,8 +43,6 @@ class MyTestCase(unittest.TestCase):
 
         a.vote.vote_codes = e.generate_credentials(a.get_uuids())
 
-        # e.set_certificate("TODO, certificate to generate while init, TODO to rename to a identifiable string")
-
         test1 = a.vote.get_alpha()
         # certificat
         logger.debug("show certivicats")

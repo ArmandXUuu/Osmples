@@ -24,7 +24,7 @@ class RegistrationServer(Server):
             credentials = {"uuid": uuid, "c_n": c_n, "c_n_int": c_n_int, "code_vote": generate_vote_code(c_n, uuid),
                            "public_key": fast_mod(g, c_n_int)}
             json_output(credentials, "./data/credentials/" + uuid)
-            vote_codes.append(credentials["public_key"])
+            vote_codes.append(credentials["code_vote"])
 
         return shuffle_list(vote_codes)
 

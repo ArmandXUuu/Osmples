@@ -1,5 +1,4 @@
 from classes.CredentialAuthority import sign_signature
-from utils.log_util import logger
 from random import randint
 from utils.const import *
 from cryptoUtils.math_utils import pgcd_1
@@ -32,12 +31,3 @@ class Server:
 
     def get_signature_x(self) -> int:
         return self.__signature_x
-
-    @staticmethod
-    def set_certificate(cert_in: str) -> bool:  # TODO To delete.
-        if Server.__certificate == "TODO, certificate to generate while init, TODO to rename to a identifiable string true":
-            logger.critical("Critical failure when setting certificate : certificate already exists")
-            return False
-
-        Server.__certificate = cert_in
-        return True

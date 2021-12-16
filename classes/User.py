@@ -1,6 +1,5 @@
 # Classe pour des utilisateurs (votant)
 from enum import IntEnum
-import random
 from utils.const import *
 from cryptoUtils.math_utils import fast_mod
 from classes.RegistrationServer import generate_secret_id
@@ -37,13 +36,3 @@ class User:
                                                                                              self.__private_key,
                                                                                              self.public_key
                                                                                              )
-
-    def type_in_c_n(self) -> str:
-        """
-        This methode acts as a user types in his/her credentials - c_n
-        :return:
-        """
-
-        # TODO À FAIRE
-        pass
-
