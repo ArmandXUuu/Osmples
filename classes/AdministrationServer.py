@@ -16,13 +16,15 @@ debug = True
 class Bulletin:
     vote_id = 0
     voter_uuid = ""
+    voter_code_vote = 0
 
     vote_chiffre = ()
     signature = 0
 
-    def __init__(self, vote_id: int, voter_uuid: str, vote_chiffre: tuple, signature = 0):
+    def __init__(self, vote_id: int, voter_uuid: str, voter_code_vote: int, vote_chiffre: tuple, signature):
         self.vote_id = vote_id
         self.voter_uuid = voter_uuid
+        self.voter_code_vote = voter_code_vote
         self.vote_chiffre = vote_chiffre
         self.signature = signature
 
@@ -30,7 +32,7 @@ class Bulletin:
 class Vote:
     id = 0
 
-    __candidates = {}
+    candidates = {}
     __starts_at = ""
     __ends_at = ""
     __choices_possible = 1
@@ -41,15 +43,15 @@ class Vote:
     bulletins = []  # liste de type Bulletin
 
     def __init__(self, candidates: dict, starts_at: str, ends_at: str, choices_possible: int = 1):
-        self.__candidates = candidates
+        self.candidates = candidates
         self.__starts_at = starts_at
         self.__ends_at = ends_at
         self.__choices_possible = choices_possible
 
     def __str__(self):
         candidate_strings = []
-        for k in self.__candidates.keys():
-            candidate_strings.append("\t\t" + str(k) + " - " + self.__candidates[k])
+        for k in self.candidates.keys():
+            candidate_strings.append("\t\t" + str(k) + " - " + self.candidates[k])
         return "\033[1mInformations on this vote :\033[0m\n\t" \
                "You can only vote between {} and {}" \
                "\n\tCandidates are : \n\033[1;32m{}\033[0m\n\tYOU CAN JUST VOTE FOR \033[1;31m{}\033[0m PERSON(S) !\n" \
@@ -71,7 +73,7 @@ class Vote:
         return alpha % p
 
     def get_candidates_num(self):
-        return len(self.__candidates)
+        return len(self.candidates)
 
 
 class AdministrationServer(Server):
@@ -117,7 +119,8 @@ class AdministrationServer(Server):
                 i += 1
             self.vote = Vote(liste_candidates, start_date, end_date)
         else:
-            self.vote = Vote({1: "Macron", 2: "Obama", 3: "XI Jinping"}, "2021-11-11 00:00:00", "2022-01-01 12:59:59", 1)
+            self.vote = Vote({1: "Macron", 2: "Obama", 3: "XI Jinping"}, "2021-11-11 00:00:00", "2022-01-01 12:59:59",
+                             1)
 
     def get_vote(self):
         return self.vote

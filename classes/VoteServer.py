@@ -3,11 +3,9 @@
 
 from classes.Server import Server
 from utils.log_util import logger
-from classes.AdministrationServer import Vote
-from random import randint
-from utils.const import p, g
-from cryptoUtils.math_utils import fast_mod, find_inverse_bezout
+from cryptoUtils.math_utils import find_inverse_bezout
 from cryptoUtils.zero_knowledge import *
+
 
 class VoteServer(Server):
     vote_codes = []
@@ -23,11 +21,35 @@ class VoteServer(Server):
 
     def execute_audit(self):
         for bulletin in self.vote.bulletins:
+            if bulletin.voter_code_vote not in self.vote_codes:
+                logger.debug("ALERT, vote_code non trouvé")
+                continue
+
             chal, w = generate_chal(bulletin.signature[1][1], bulletin.voter_uuid)
-            ressss = zero_knowledge_verify(w, "0EMHOOG9aT3ZfE102", chal, bulletin.signature[1][1], bulletin.voter_uuid)
-            print("dfadsfad")
-        # TODO envoyer chal aux users
-        # TODO implemente-le
+
+            if zero_knowledge_verify(w, json_read(bulletin.voter_uuid, "c_n"), chal, bulletin.signature[1][1], bulletin.voter_uuid):
+                logger.debug("Zero-Knowledge Proof passed !")
+            else:
+                logger.debug("Zero-Knowledge Proof NOT PASSED !")
+            if zero_knowledge_verify(w, json_read(bulletin.voter_uuid, "c_n")+"d", chal, bulletin.signature[1][1], bulletin.voter_uuid):
+                logger.debug("Zero-Knowledge Proof passed !")
+            else:
+                logger.debug("Zero-Knowledge Proof NOT PASSED !")
+
+    def counting(self):
+        # init
+        candidates = self.vote.candidates
+        candidates_count = {}
+        candidate_num = len(candidates)
+        for i in range(1, candidate_num+1):
+            candidates_count[i] = 0
+
+        # count
+        for bulletin in self.vote.bulletins:
+            candidates_count[decrypt_vote(11, *bulletin.vote_chiffre)] += 1
+
+        for i in range(1, candidate_num + 1):
+            print("there is " + str(candidates_count[i]) + " for " + candidates[i])
 
 
 def encrypt_vote(alpha: int, message: int) -> tuple:

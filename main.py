@@ -83,7 +83,7 @@ def start_vote_selection():
     y = randint(2, p - 1)
     while pgcd_1(y, p - 1) != 1:
         y = randint(2, p - 1)
-    s.vote.add_bulletin(Bulletin(a.vote.id, uuid, vote_encrypted, sign_signature(vote_encrypted[1], c_n_int, y)))
+    s.vote.add_bulletin(Bulletin(a.vote.id, uuid, json_read(uuid, "code_vote"), vote_encrypted, sign_signature(vote_encrypted[1], c_n_int, y)))
     print_information("Votre choix est bien pris en compte !")
 
 
@@ -94,6 +94,7 @@ def start_vote_verification():
 
 def start_vote_counting():
     print_information("Dépouillement du vote...")
+    s.counting()
 
 
 def terminate_program():
