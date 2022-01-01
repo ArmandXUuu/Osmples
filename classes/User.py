@@ -1,6 +1,6 @@
 # Classe pour des utilisateurs (votant)
 from enum import IntEnum
-from utils.const import *
+from utils.const import g
 from cryptoUtils.math_utils import fast_mod
 from classes.RegistrationServer import generate_secret_id
 

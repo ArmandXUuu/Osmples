@@ -1,6 +1,6 @@
 import logging
 
-formatter = logging.Formatter("\033[1;32m%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s - %(message)s\033[0m","%m/%d/%Y %I:%M:%S %p")
+formatter = logging.Formatter("\033[1;32m%(asctime)s %(levelname)s %(filename)s[line:%(lineno)d] - %(message)s\033[0m")
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

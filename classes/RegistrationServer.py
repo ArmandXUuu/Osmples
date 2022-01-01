@@ -1,9 +1,8 @@
 # Le serveur "E"
 # Il est l'autorité d'enregristrement des utilisateurs (le serveur qui CRÉER LES ACCÉS)
+
 from random import choice, shuffle
-
 from Crypto.Protocol.KDF import PBKDF2
-
 from classes.Server import Server
 from cryptoUtils.math_utils import fast_mod
 from utils.const import ascii_vals_rev, ascii_vals, g, p
@@ -51,13 +50,9 @@ def generate_secret_id() -> tuple:
     return c_n_str, c_n_int
 
 
-def generate_secret_s(c_n: str, uuid: str) -> bytes:
-    return PBKDF2(c_n, bytes(uuid, "utf-8"))
-
-
 def generate_vote_code(c_n: str, uuid: str) -> int:  # Pub() function
     print("Code de vote pour c_n is generated")
-    return fast_mod(g, int.from_bytes(generate_secret_s(c_n, uuid), byteorder="little"), p)
+    return fast_mod(g, int.from_bytes(PBKDF2(c_n, bytes(uuid, "utf-8")), byteorder="little"), p)
 
 
 def shuffle_list(list_in: [str]) -> [str]:
