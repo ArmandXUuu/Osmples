@@ -3,6 +3,7 @@
 
 from classes.Server import Server
 from utils.log_util import logger
+from utils.debug import debug
 from cryptoUtils.math_utils import find_inverse_bezout
 from cryptoUtils.zero_knowledge import *
 
@@ -35,11 +36,12 @@ class VoteServer(Server):
                 logger.debug("Zero-Knowledge Proof passed !")
             else:
                 logger.debug("Zero-Knowledge Proof NOT PASSED !")
-            if zero_knowledge_verify(w, json_read(bulletin.voter_uuid, "c_n") + "d", chal, bulletin.signature[1][1],
-                                     bulletin.voter_uuid):
-                logger.debug("Zero-Knowledge Proof passed !")
-            else:
-                logger.debug("Zero-Knowledge Proof NOT PASSED !")
+            if not debug:
+                if zero_knowledge_verify(w, json_read(bulletin.voter_uuid, "c_n") + "d", chal, bulletin.signature[1][1],
+                                         bulletin.voter_uuid):
+                    logger.debug("Zero-Knowledge Proof passed !")
+                else:
+                    logger.debug("Zero-Knowledge Proof NOT PASSED !")
 
     def counting(self):
         """
