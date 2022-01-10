@@ -21,7 +21,8 @@ global e
 global s
 
 # debug variables
-logger.debug("This is the very begging of the program !")
+if debug:
+    logger.debug("This is the very begging of the program !")
 
 vote_test = A.Vote({1: "Macron", 2: "Obama", 3: "XI Jinping"}, "2021-11-11 00:00:00", "2022-01-01 12:59:59", 1)
 
@@ -48,6 +49,7 @@ def start_elector_creation():
         last_name = input("Please enter the last name : ")
         email = input("Please enter email : ")
         a.add_user(U.User(first_name, last_name, email, U.UserTypes.Voter))
+        user_definition_done()
     else:
         a.add_user(U.User("ziyi", "XU", "ziyi@drouot.com", U.UserTypes.Voter))
         a.add_user(U.User("ziy1i", "XU4", "ziyi1@drouot.com", U.UserTypes.Voter))
