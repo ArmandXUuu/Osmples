@@ -11,7 +11,7 @@ def sign_signature(message: str, x: int, y: int) -> tuple:
     :param x: the private key chosen by the server `randint(2, p-2)`
     :param y: chosen by the server `randint(2, p-1)`
     :return: a tuple, the first element is a tuple (p,g,h), which is the public key ;
-            the second element is another tuple (s_1, s_2) which is the signature itself.
+             the second element is another tuple (s_1, s_2) which is the signature itself.
     """
     y_inv = find_inverse_bezout(y, p - 1)
     h = fast_mod(g, x)

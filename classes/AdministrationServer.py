@@ -3,17 +3,25 @@
 
 from classes.User import User, UserTypes
 from classes.Server import Server
-import time
-from enum import Enum
 from cryptoUtils.hashage import generate_uuid
 from utils.log_util import logger
-from utils.file_rw_utils import json_output
-from utils.const import *
-
-debug = True
+from utils.const import p
+from utils.debug import debug
 
 
 class Bulletin:
+    """
+    class Bulletin :
+        Is the object of 'bulletin'. It is the basic element of `Vote.bulletins`. It contains the choice
+        of a voter `voter_uuid` in a specific vote `vote_id`.
+
+    Attributes :
+        vote_id : int, the id of the vote, is used to identify to which vote this bulletin belongs.
+        voter_uuid : str, the uuid of the voter
+        voter_code_vote : int, the vote code of the voter
+        vote_chiffre : tuple, is the encrypted bulletin, contains the choice of voter *voter_uuid*
+        signature : int, is the signature who proves the consciousness of `c_n`
+    """
     vote_id = 0
     voter_uuid = ""
     voter_code_vote = 0
@@ -30,6 +38,17 @@ class Bulletin:
 
 
 class Vote:
+    """
+    class Vote :
+        It is the object of a vote, contains the information about :
+            1. Basic infos of the vote like dates, candidates...
+            2. A list of `vote_codes` which are the users registered in this vote, only them have access
+               and rights to this vote.
+            3. A list of `Bulletins` named after `bulletins`, it contains all the bulletins, which are
+               the choices of users.
+            4. `alphas` which is a dict, it is a dictionary {uuid: user.public_key} for all 'chargé de
+               dépouillement' of this vote
+    """
     id = 0
 
     candidates = {}
@@ -43,12 +62,26 @@ class Vote:
     bulletins = []  # liste de type Bulletin
 
     def __init__(self, candidates: dict, starts_at: str, ends_at: str, choices_possible: int = 1):
+        """
+        Initiation, the unique way to input basic information of a vote. Which is to say we have no
+        other way to change these infos.
+        :param candidates: a dict which contains all of the candidates of this vote.
+        :param starts_at: str, as its name suggests
+        :param ends_at: str, as its name suggests
+        :param choices_possible: int, is the possible number of choices a voter can made in this vote.
+        """
         self.candidates = candidates
         self.__starts_at = starts_at
         self.__ends_at = ends_at
         self.__choices_possible = choices_possible
 
     def __str__(self):
+        """
+        Overwrites the __str__ methode. It gives a user-friendly str output of the basic
+        information of this vote
+
+        :return: A formatted string.
+        """
         candidate_strings = []
         for k in self.candidates.keys():
             candidate_strings.append("\t\t" + str(k) + " - " + self.candidates[k])
@@ -66,6 +99,11 @@ class Vote:
         return self.bulletins
 
     def get_alpha(self) -> int:
+        """
+        It calculates the production of alphas of each 'chargé de dépouillement'
+        $\alpha_{i}=g^{s_{i}}$ et $\alpha=\prod_{i} \alpha_{i}=\prod_{i} g^{s_{i}}=g^{\sum_{i} s_{i}}$
+        :return: the alpha
+        """
         alpha = 1
         for a in self.alphas.values():
             alpha *= a
@@ -77,8 +115,15 @@ class Vote:
 
 
 class AdministrationServer(Server):
+    """
+    The server "\mathcal{A}".
+    'l'authorité d'administration de l'élection'
+
+    Attributes :
+        user_infos : dict, {uuid: user}
+        vote : Vote, the vote
+    """
     user_infos = dict()  # a dict contains uuid and user : {uuid: user}
-    # votes = []
     vote = None
 
     def __init__(self):
@@ -86,13 +131,17 @@ class AdministrationServer(Server):
         logger.debug("An Administration Server was initiated")
 
     def add_user(self, user: User):
+        """
+        There are 2 types of users, see : ./classes/User.py `class UserTypes(IntEnum)`
+        Here we generate user's `uuid`, and add to `user_infos`. If this user is a 'chargé de dépouillement', then
+        store his/her alpha, the public key.
+        :param user: type User
+        """
         uuid = generate_uuid("user_Unique_ID for {}".format(user.__str__()))
         self.user_infos[uuid] = user  # for now we just deal with one vote a time. so no [[__user_list]] for now
 
         if user.user_type == UserTypes.TrustedDelegatedUser:
             self.vote.alphas[uuid] = user.public_key
-        # else:
-        #   self.vote.vote_codes.append(user.public_key)
 
         logger.debug(self.user_infos)
 
@@ -107,6 +156,9 @@ class AdministrationServer(Server):
         return "In administrater server A we have : {} - {}".format(self.user_infos, self.user_infos)
 
     def set_vote(self):
+        """
+        Where we configure a vote.
+        """
         if not debug:
             start_date = input("Date de début (YYYY-MM-DD) : ")
             end_date = input("Date de fin (YYYY-MM-DD) : ")

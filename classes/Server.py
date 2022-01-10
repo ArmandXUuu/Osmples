@@ -5,6 +5,10 @@ from cryptoUtils.math_utils import pgcd_1
 
 
 class Server:
+    """
+    The super class of all servers : `AdministrationServer`, `RegistrationServer`, `VoteServer`
+    A server has a certificate and its required variables.
+    """
     __certificate = ()
     __signature_x = 0
     __signature_y = 0

@@ -8,6 +8,9 @@ from cryptoUtils.zero_knowledge import *
 
 
 class VoteServer(Server):
+    """
+    This server takes charges of operations during a vote,
+    """
     vote_codes = []
     vote = None
 
@@ -19,7 +22,7 @@ class VoteServer(Server):
         self.vote = vote
         self.vote_codes = self.vote.vote_codes
 
-    def execute_audit(self):
+    def audit(self):
         for bulletin in self.vote.bulletins:
             if bulletin.voter_code_vote not in self.vote_codes:
                 logger.debug("ALERT, vote_code non trouvé")
@@ -27,21 +30,27 @@ class VoteServer(Server):
 
             chal, w = generate_chal(bulletin.signature[1][1], bulletin.voter_uuid)
 
-            if zero_knowledge_verify(w, json_read(bulletin.voter_uuid, "c_n"), chal, bulletin.signature[1][1], bulletin.voter_uuid):
+            if zero_knowledge_verify(w, json_read(bulletin.voter_uuid, "c_n"), chal, bulletin.signature[1][1],
+                                     bulletin.voter_uuid):
                 logger.debug("Zero-Knowledge Proof passed !")
             else:
                 logger.debug("Zero-Knowledge Proof NOT PASSED !")
-            if zero_knowledge_verify(w, json_read(bulletin.voter_uuid, "c_n")+"d", chal, bulletin.signature[1][1], bulletin.voter_uuid):
+            if zero_knowledge_verify(w, json_read(bulletin.voter_uuid, "c_n") + "d", chal, bulletin.signature[1][1],
+                                     bulletin.voter_uuid):
                 logger.debug("Zero-Knowledge Proof passed !")
             else:
                 logger.debug("Zero-Knowledge Proof NOT PASSED !")
 
     def counting(self):
+        """
+        `counting()` execute the process of "dépouillement". It
+        :return:
+        """
         # init
         candidates = self.vote.candidates
         candidates_count = {}
         candidate_num = len(candidates)
-        for i in range(1, candidate_num+1):
+        for i in range(1, candidate_num + 1):
             candidates_count[i] = 0
 
         # count
